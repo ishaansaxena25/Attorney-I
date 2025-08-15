@@ -1,12 +1,14 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const newsRoutes = require("./routes/news");
 const scheduleNewsFetching = require("./scheduler/newsScheduler");
 
 const app = express();
 
 // Middleware
+app.use(cors()); // Add CORS middleware before routes
 app.use(express.json());
 
 // Routes
