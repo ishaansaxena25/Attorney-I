@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const legalNewsSchema = new mongoose.Schema({
   articleId: {
     type: String,
-    unique: true, // Ensure IDs are unique
+    unique: true,
     required: true,
   },
   title: String,
@@ -19,13 +19,23 @@ const legalNewsSchema = new mongoose.Schema({
   tags: [
     {
       type: String,
-      enum: ["Corporate", "Criminal", "International", "Privacy"],
+      enum: [
+        "Corporate",
+        "Criminal",
+        "International",
+        "Privacy",
+        "Constitutional",
+        "Environmental",
+        "Human Rights",
+        "Tax",
+        "Labor",
+      ],
     },
   ],
   fetchedAt: {
     type: Date,
     default: Date.now,
-    expires: 604800, // 7 days in seconds
+    expires: 604800,
   },
 });
 

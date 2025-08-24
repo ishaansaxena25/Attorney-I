@@ -1,22 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const LegalNews = require("../models/LegalNews");
+const newsController = require("../controllers/newsController");
 
-// GET /api/news
 router.get("/", async (req, res) => {
   try {
-    const tag = req.query.tag;
-    const query = tag ? { tags: tag } : {};
-
-    const articles = await LegalNews.find(query)
-      .sort({ publishedAt: -1 })
-      .limit(10);
-
+    const { tag } = req.query;
+    const news = await newsController.getNews(tag);
     res.json({
       status: "success",
       data: {
-        articles,
-        count: articles.length,
+        articles: news,
+        count: news.length,
       },
     });
   } catch (error) {

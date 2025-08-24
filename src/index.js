@@ -8,7 +8,7 @@ const scheduleNewsFetching = require("./scheduler/newsScheduler");
 const app = express();
 
 // Middleware
-app.use(cors()); // Add CORS middleware before routes
+app.use(cors());
 app.use(express.json());
 
 // Routes
@@ -18,6 +18,11 @@ app.use("/api/news", newsRoutes);
 const MONGODB_URI = process.env.MONGODB_URI;
 if (!MONGODB_URI) {
   console.error("MONGODB_URI environment variable is not set");
+  process.exit(1);
+}
+
+if (!process.env.OPENAI_API_KEY) {
+  console.error("OPENAI_API_KEY environment variable is not set");
   process.exit(1);
 }
 
