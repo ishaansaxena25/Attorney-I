@@ -31,7 +31,7 @@ Article Description: ${description}
 Return only the category names as a comma-separated list. Select only the most relevant categories (maximum 3).`;
 
       const completion = await this.openai.chat.completions.create({
-        model: "gpt-4",
+        model: "gpt-4o", // Updated model name
         messages: [
           {
             role: "system",
@@ -50,10 +50,28 @@ Return only the category names as a comma-separated list. Select only the most r
       const response = completion.choices[0].message.content.trim();
       const tags = response.split(",").map((tag) => tag.trim());
 
-      return tags.filter((tag) => this.LEGAL_CATEGORIES.includes(tag));
+      // Validate returned tags against our predefined categories
+      const validTags = tags.filter((tag) =>
+        this.LEGAL_CATEGORIES.includes(tag)
+      );
+
+      // Log for monitoring
+      console.log(`Generated tags for article: "${title.substring(0, 30)}..."`);
+      console.log("Valid tags:", validTags);
+
+      return validTags;
     } catch (error) {
       console.error("OpenAI Service Error:", error);
-      return [];
+      // Add fallback logic if API fails
+      const titleLower = title.toLowerCase();
+      const descLower = description.toLowerCase();
+
+      // Simple keyword matching as fallback
+      return this.LEGAL_CATEGORIES.filter(
+        (category) =>
+          titleLower.includes(category.toLowerCase()) ||
+          descLower.includes(category.toLowerCase())
+      ).slice(0, 3);
     }
   }
 }
